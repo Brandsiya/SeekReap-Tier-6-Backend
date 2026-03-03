@@ -1,0 +1,50 @@
+nohup: ignoring input
+INFO:__main__:📋 Connecting to database...
+INFO:__main__:✅ Connected to database
+INFO:__main__:🚀 PGQueuer worker started, listening for jobs...
+INFO:__main__:   - Registered handlers: video-process, url-process
+INFO:__main__:🔗 Starting URL processing for job 5: http://googleusercontent.com/youtube.com/final_test
+INFO:__main__:Updated job 5 status to processing
+INFO:__main__:Processing URL for job 5...
+INFO:__main__:Updated job 5 status to completed
+INFO:__main__:✅ URL processing completed for job 5
+ERROR:pgqueuer:Unhandled exception in task: <Task finished name='Task-3' coro=<SchedulerManager.run() done, defined at /home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/sm.py:126> exception=ConnectionDoesNotExistError('connection was closed in the middle of operation')>
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/asyncio/selector_events.py", line 862, in _read_ready__data_received
+    data = self._sock.recv(self.max_size)
+ConnectionAbortedError: [Errno 103] Software caused connection abort
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/sm.py", line 156, in run
+    scheduled = await self.queries.fetch_schedule(
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/queries.py", line 639, in fetch_schedule
+    for row in await self.driver.fetch(
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/db.py", line 177, in fetch
+    return [dict(x) for x in await self._connection.fetch(query, *args)]
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/asyncpg/connection.py", line 691, in fetch
+    return await self._execute(
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/asyncpg/connection.py", line 1794, in _execute
+    result, _ = await self.__execute(
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/asyncpg/connection.py", line 1892, in __execute
+    result, stmt = await self._do_execute(
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/asyncpg/connection.py", line 1945, in _do_execute
+    result = await executor(stmt, None)
+  File "asyncpg/protocol/protocol.pyx", line 207, in bind_execute
+asyncpg.exceptions.ConnectionDoesNotExistError: connection was closed in the middle of operation
+ERROR:pgqueuer:Unhandled exception in task: <Task finished name='Task-2' coro=<QueueManager.run() done, defined at /home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/qm.py:451> exception=InterfaceError('connection is closed')>
+Traceback (most recent call last):
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/qm.py", line 528, in run
+    async for job in self.fetch_jobs(batch_size, max_concurrent_tasks):
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/qm.py", line 373, in fetch_jobs
+    jobs := await self.queries.dequeue(
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/queries.py", line 305, in dequeue
+    rows = await self.driver.fetch(
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/pgqueuer/db.py", line 177, in fetch
+    return [dict(x) for x in await self._connection.fetch(query, *args)]
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/asyncpg/connection.py", line 690, in fetch
+    self._check_open()
+  File "/home/userland/SeekReap-Tier-6-Dashboard/backend/venv/lib/python3.10/site-packages/asyncpg/connection.py", line 1534, in _check_open
+    raise exceptions.InterfaceError('connection is closed')
+asyncpg.exceptions._base.InterfaceError: connection is closed
