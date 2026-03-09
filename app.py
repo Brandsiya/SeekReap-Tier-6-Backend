@@ -1,15 +1,32 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import os
+import psycopg2
 
 app = Flask(__name__)
+DB_URL = "postgres://neondb_owner:npg_yX7aHMwIqQC4@ep-rapid-base-ai27r1sa-pooler.c-4.us-east-1.aws.neon.tech/seekreap_neon_db?sslmode=require"
 
 @app.route('/health')
 def health_check():
     return jsonify({"status": "healthy", "service": "seekreap-backend"}), 200
 
-@app.route('/')
-def index():
-    return "SeekReap Tier-6 API is running."
+@app.route('/analyze', methods=['POST'])
+def analyze_video():
+    data = request.json
+    video_id = data.get('video_id')
+    
+    if not video_id:
+        return jsonify({"error": "Missing video_id"}), 400
+
+    try:
+        conn = psycopg2.connect(DB_URL)
+        cur = conn.cursor()
+        cur.execute("INSERT INTO video_patterns (video_id, status) VALUES (%s, 'pending') ON CONFLICT (video_id) DO NOTHING;", (video_id,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return jsonify({"message": f"Video {video_id} queued for analysis"}), 202
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
